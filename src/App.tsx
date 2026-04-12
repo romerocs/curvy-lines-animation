@@ -1,255 +1,132 @@
 import './App.css';
+import { normalize } from './utils';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 
 import styled from 'styled-components';
 
-const StyledPath = styled.path<{ $animate?: boolean, $duration?: number, $dashoffset?: string }>`
-  
-  stroke-dashoffset: ${props => props.$dashoffset || '1'}px;
+const StyledPath = styled.path`
+  stroke-dashoffset: calc(var(--dashoffset, 1) * 1px);
   stroke-dasharray: 1px 1000px;
-
-  ${props => props.$animate && `
-    animation-name: animatePath;
-    animation-duration: ${props.$duration}ms;
-    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: forwards;
-  `}
-
-    @keyframes animatePath {
-    to {
-      stroke-dashoffset: 0px;
-    }
-  }
 `;
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+const StyledPathAnimated = styled.path`
+  stroke-dashoffset: calc(var(--dashoffset, 1) * 1px);
+  stroke-dasharray: 1px 1000px;
+`;
 
-async function delayAnimation(ms: number, fn: Function) {
-  await sleep(ms);
+const Scroller = styled.div`
+  height: 5000px;
+`
 
-  fn();
-}
+const BottomRight = ({ staticBg }: { staticBg?: boolean }) => {
+  const style = staticBg ? { '--dashoffset': '0px' } as CSSProperties : {};
 
-const BottomRight = ({ shouldAnimate, staticBg }: { shouldAnimate: boolean, staticBg?: boolean }) => {
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-  const [path3ShouldAnimate, setPath3ShouldAnimate] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
-
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-        setTimeout(() => {
-          setPath3ShouldAnimate(true);
-        }, 75);
-      }, 75);
-    }, 0);
-
-    //    return () => clearTimeout(timeout);
-  }, [shouldAnimate]);
-
-  return <g>
-    <StyledPath $animate={path1ShouldAnimate} $duration={2000} $dashoffset={staticBg ? '0' : '1'} className="path-1" d="M1157 836C1157 761.222 1245.43 716 1370 716" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path2ShouldAnimate} $duration={2500} className="path-2" d="M1009 836C1009 667.749 1158.87 566 1370 566" stroke="#FDB5D5" strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path3ShouldAnimate} $duration={3000} $dashoffset={staticBg ? '0' : '1'} className="path-3" d="M862 836C862 576.146 1072.89 419 1370 419" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" pathLength="1" />
+  return <g style={style}>
+    <StyledPathAnimated className="path-1" d="M1157 915 L1157 836C1157 761.222 1245.43 716 1370 716" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-2" d="M1009 915 L1009 836C1009 667.749 1158.87 566 1370 566" stroke={staticBg ? '#ffffff' : '#FDB5D5'} strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-3" d="M862 915 L862 836C862 576.146 1072.89 419 1370 419" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" pathLength="1" />
   </g>
 };
 
-const Center = ({ shouldAnimate, staticBg }: { shouldAnimate: boolean, staticBg?: boolean }) => {
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-  const [path3ShouldAnimate, setPath3ShouldAnimate] = useState<boolean>(false);
+const Center = ({ staticBg }: { staticBg?: boolean }) => {
+  const style = staticBg ? { '--dashoffset': '0px' } as CSSProperties : {};
 
-  const duration = 3000;
-
-  useEffect(() => {
-
-    if (!shouldAnimate) return;
-
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
-
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-        setTimeout(() => {
-          setPath3ShouldAnimate(true);
-        }, 150);
-      }, 150);
-    }, 0);
-  }, [shouldAnimate]);
-
-  return <g>
-    <StyledPath $animate={path1ShouldAnimate} $duration={duration} $dashoffset={staticBg ? '0' : '1'} className="path-1" d="M689 -16.5C835.949 217.938 741.051 322.426 538.452 465.601C416.756 551.603 292.983 735.222 319.303 905" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
-    <StyledPath $animate={path2ShouldAnimate} $duration={duration} $dashoffset={staticBg ? '0' : '1'} className="path-2" d="M815.001 -94.5C961.95 139.938 906.099 383.325 703.5 526.5C581.804 612.502 408.5 752.5 484 959" stroke={staticBg ? '#ffffff' : '#FDB5D5'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
-    <StyledPath $animate={path3ShouldAnimate} $duration={duration} $dashoffset={staticBg ? '0' : '1'} className="path-3" d="M940 -173C1153 170 1008 492.282 811 631.5C694 722 544 779.5 654.5 983" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
+  return <g style={style}>
+    <StyledPathAnimated className="path-1" d="M650 -100 L689 -16.5C835.949 217.938 741.051 322.426 538.452 465.601C416.756 551.603 292.983 735.222 319.303 905" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
+    <StyledPathAnimated className="path-2" d="M815.001 -94.5C961.95 139.938 906.099 383.325 703.5 526.5C581.804 612.502 408.5 752.5 484 959" stroke={staticBg ? '#ffffff' : '#FDB5D5'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
+    <StyledPathAnimated className="path-3" d="M940 -173C1153 170 1008 492.282 811 631.5C694 722 544 779.5 654.5 983" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" strokeLinecap="square" pathLength="1" />
   </g>
 }
 
-const LeftTop = ({ shouldAnimate, staticBg }: { shouldAnimate: boolean, staticBg?: boolean }) => {
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-  const [path3ShouldAnimate, setPath3ShouldAnimate] = useState<boolean>(false);
+const LeftTop = ({ staticBg }: { staticBg?: boolean }) => {
+  const style = staticBg ? { '--dashoffset': '0px' } as CSSProperties : {};
 
-  useEffect(() => {
-    if (!shouldAnimate) return;
+  return <g style={style}>
+    <StyledPathAnimated className="path-1" d="M666.95 518.322C512.092 565.132 337.864 442.001 277.8 243.299C251.865 157.5 270.968 35.9999 277.8 -40" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" pathLength="1" />
 
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
+    <StyledPathAnimated className="path-2" d="M710.479 660.372C477.996 730.648 221.893 563.861 138.458 287.842C108.592 189.042 118.872 67.4999 125 -26" stroke={staticBg ? '#ffffff' : '#FDB5D5'} strokeWidth="150" pathLength="1" />
 
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-        setTimeout(() => {
-          setPath3ShouldAnimate(true);
-        }, 150);
-      }, 150);
-    }, 0);
-  }, [shouldAnimate]);
-
-  return <g>
-    <StyledPath $animate={path1ShouldAnimate} $duration={2000} $dashoffset={staticBg ? '0' : '1'} className="path-1" d="M666.95 518.322C512.092 565.132 337.864 442.001 277.8 243.299C251.865 157.5 270.968 35.9999 277.8 -40" stroke={staticBg ? '#ffffff' : '#FDD8E9'} strokeWidth="150" pathLength="1" />
-
-    <StyledPath $animate={path2ShouldAnimate} $duration={2500} $dashoffset={staticBg ? '0' : '1'} className="path-2" d="M710.479 660.372C477.996 730.648 221.893 563.861 138.458 287.842C108.592 189.042 118.872 67.4999 125 -26" stroke={staticBg ? '#ffffff' : '#FDB5D5'} strokeWidth="150" pathLength="1" />
-
-    <StyledPath $animate={path3ShouldAnimate} $duration={3000} $dashoffset={staticBg ? '0' : '1'} className="path-3" d="M564.5 824.836C315.466 807.027 81.8696 615.096 -3.80824 331.66C-37.9042 218.865 -27 78.5 -27 -27" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-3" d="M564.5 824.836C315.466 807.027 81.8696 615.096 -3.80824 331.66C-37.9042 218.865 -27 78.5 -27 -27" stroke={staticBg ? '#ffffff' : '#FB84B9'} strokeWidth="150" pathLength="1" />
 
   </g>
 }
 
-const TopRight = ({ shouldAnimate }: { shouldAnimate: boolean }) => {
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-  const [path3ShouldAnimate, setPath3ShouldAnimate] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
-
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-        setTimeout(() => {
-          setPath3ShouldAnimate(true);
-        }, 150);
-      }, 150);
-    }, 0);
-  }, [shouldAnimate]);
+const TopRight = () => {
 
   return <g>
-    <StyledPath $animate={path1ShouldAnimate} $duration={2000} className="path-1" d="M1114.09 -38.2216C1114.09 43.5 1021.34 78.4692 896.846 73.92" stroke="#FDB5D5" strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path2ShouldAnimate} $duration={2500} className="path-2" d="M1261.99 -32.817C1255.84 135.321 1102.36 231.53 891.368 223.82" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path3ShouldAnimate} $duration={3000} className="path-3" d="M1408.89 -27.4488C1399.4 232.232 1182.91 381.572 886 370.722" stroke="#F6559D" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-1" d="M1114.09 -38.2216C1114.09 43.5 1021.34 78.4692 896.846 73.92" stroke="#FDB5D5" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-2" d="M1261.99 -32.817C1255.84 135.321 1102.36 231.53 891.368 223.82" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-3" d="M1408.89 -27.4488C1399.4 232.232 1182.91 381.572 886 370.722" stroke="#F6559D" strokeWidth="150" pathLength="1" />
   </g>
 }
 
-const CenterTop = ({ shouldAnimate }: { shouldAnimate: boolean }) => {
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-  const [path3ShouldAnimate, setPath3ShouldAnimate] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
-
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-        setTimeout(() => {
-          setPath3ShouldAnimate(true);
-        }, 150);
-      }, 150);
-    }, 0);
-
-  }, [shouldAnimate]);
-
+const CenterTop = () => {
   return <g>
-    <StyledPath $animate={path1ShouldAnimate} $duration={3000} className="path-1" d="M374.08 337.265C439 296.5 522.47 351.398 586.528 458.24" stroke="#F6559D" strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path2ShouldAnimate} $duration={3000} className="path-2" d="M297.976 210.331C445 125 597.5 195 715.177 381.107" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
-    <StyledPath $animate={path3ShouldAnimate} $duration={3000} className="path-3" d="M222.386 84.2557C445.252 -49.3662 688.475 50.7018 841.253 305.517" stroke="#FDB5D5" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-1" d="M350 375 L374.08 337.265C439 296.5 522.47 351.398 586.528 458.24" stroke="#F6559D" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-2" d="M250 210 L297.976 210.331C445 125 597.5 195 715.177 381.107" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-3" d="M222.386 84.2557C445.252 -49.3662 688.475 50.7018 841.253 305.517" stroke="#FDB5D5" strokeWidth="150" pathLength="1" />
   </g>
 }
 
-const LeftBottom = ({ shouldAnimate }: { shouldAnimate: boolean }) => {
-
-  const [path1ShouldAnimate, setPath1ShouldAnimate] = useState<boolean>(false);
-  const [path2ShouldAnimate, setPath2ShouldAnimate] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    setTimeout(() => {
-      setPath1ShouldAnimate(true);
-
-      setTimeout(() => {
-        setPath2ShouldAnimate(true);
-
-      }, 150);
-    }, 0);
-  }, [shouldAnimate]);
-
+const LeftBottom = () => {
   return <g>
-    <StyledPath $duration={3000} $animate={path1ShouldAnimate} className="path-1" d="M-237.572 475C-69.3216 475.199 32.2501 625.188 31.9998 836.32" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
-    <StyledPath $duration={3000} $animate={path2ShouldAnimate} className="path-2" d="M-237.398 328C22.4557 328.308 179.352 539.389 179 836.494" stroke="#F6559D" strokeWidth="150" pathLength="1"></StyledPath>
+    <StyledPathAnimated className="path-1" d="M-237.572 475C-69.3216 475.199 32.2501 625.188 31.9998 836.32" stroke="#FA85B9" strokeWidth="150" pathLength="1" />
+    <StyledPathAnimated className="path-2" d="M-237.398 328C22.4557 328.308 179.352 539.389 179 836.494" stroke="#F6559D" strokeWidth="150" pathLength="1" />
   </g>
 }
 
 function App() {
-  const [bottomRightShouldAnimate, setBottomRightShouldAnimate] = useState<boolean>(false);
-  const [centerShouldAnimate, setCenterShouldAnimate] = useState<boolean>(false);
-  const [leftTopShouldAnimate, setLeftTopShouldAnimate] = useState<boolean>(false);
-  const [topRightShouldAnimate, setTopRightShouldAnimate] = useState<boolean>(false);
-  const [centerTopShouldAnimate, setCenterTopShouldAnimate] = useState<boolean>(false);
-  const [leftBottomShouldAnimate, setLeftBottomShouldAnimate] = useState<boolean>(false);
-  const [singleCenterLineShouldAnimate, setSingleCenterLineShouldAnimate] = useState<boolean>(false);
+  const [dashOffset, setDashOffset] = useState<string | undefined>('1');
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    const runAnimation = async () => {
-      setBottomRightShouldAnimate(true);
-      setCenterShouldAnimate(true);
-      setLeftTopShouldAnimate(true);
-      setTopRightShouldAnimate(true);
-      setCenterTopShouldAnimate(true);
-      setLeftBottomShouldAnimate(true);
+    console.log(svgRef.current);
+  }, []);
 
-      delayAnimation(500, () => setSingleCenterLineShouldAnimate(true));
-    };
+  useEffect(() => {
+    function scrollHandler() {
+      const currentScrollPosY = window.scrollY;
+      var body = document.body,
+        html = document.documentElement;
 
-    runAnimation();
+      var documentHeight = Math.max(body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight);
 
-  }, [bottomRightShouldAnimate]);
+      const normalized = normalize(currentScrollPosY, 0, documentHeight - window.innerHeight, 1, 0);
 
+      if (svgRef.current) {
+        svgRef.current.style.setProperty('--dashoffset', normalized + '');
+      }
+
+      setDashOffset(normalized + '');
+    }
+    window.addEventListener('scroll', scrollHandler);
+
+    return () => {
+      window.removeEventListener('scroll', scrollHandler);
+    }
+  }, []);
   return (
     <>
-
-      <svg viewBox="0 0 1280 832" fill="none" preserveAspectRatio="xMidYMid slice">
+      <Scroller />
+      <svg ref={svgRef} viewBox="0 0 1280 832" fill="none" preserveAspectRatio="xMidYMid slice">
         <g clipPath="url(#clip0_1_2)">
           <rect width="1280" height="832" fill="white"></rect>
           <g id="fill">
             <path id="background" d="M1280 832L1280 0L0 -5.59506e-05L-3.63679e-05 832L1280 832Z" fill="#F6559D" />
-            <StyledPath d="M 730,840 L 850,710" stroke="#F6559D" strokeWidth="75" $animate={singleCenterLineShouldAnimate} $duration={3000} pathLength="1" />
-            <StyledPath d="M 1250,840 L 1260,820" stroke="#F6559D" strokeWidth="100" $duration={3000} $animate={true} pathLength="1" />
-            <LeftBottom shouldAnimate={leftBottomShouldAnimate} />
-            <CenterTop shouldAnimate={centerTopShouldAnimate} />
-            <TopRight shouldAnimate={topRightShouldAnimate} />
-            <LeftTop staticBg={true} shouldAnimate={false} />
-            <LeftTop shouldAnimate={leftTopShouldAnimate} />
-            <Center staticBg={true} shouldAnimate={false} />
-            <Center shouldAnimate={centerShouldAnimate} />
-            <BottomRight staticBg={true} shouldAnimate={false} />
-            <BottomRight shouldAnimate={bottomRightShouldAnimate} />
+            <StyledPathAnimated d="M 730,870 L 730,840 L 850,710" stroke="#F6559D" strokeWidth="75" $dashoffset={dashOffset} pathLength="1" />
+            <StyledPath d="M 1250,840 L 1260,820" stroke="#F6559D" strokeWidth="100" pathLength="1" />
+            <LeftBottom />
+            <CenterTop />
+            <TopRight />
+            <LeftTop staticBg={true} />
+            <LeftTop />
+            <Center staticBg={true} />
+            <Center />
+            <BottomRight staticBg={true} />
+            <BottomRight />
 
           </g>
           <g id="track">
