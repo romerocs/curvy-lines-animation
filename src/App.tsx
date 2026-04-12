@@ -1,7 +1,7 @@
 import './App.css';
 import { normalize } from './utils';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 
 import styled from 'styled-components';
