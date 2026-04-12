@@ -78,7 +78,6 @@ const LeftBottom = () => {
 }
 
 function App() {
-  const [dashOffset, setDashOffset] = useState<string | undefined>('1');
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -99,8 +98,6 @@ function App() {
       if (svgRef.current) {
         svgRef.current.style.setProperty('--dashoffset', normalized + '');
       }
-
-      setDashOffset(normalized + '');
     }
     window.addEventListener('scroll', scrollHandler);
 
