@@ -116,7 +116,7 @@ function App() {
           <rect width="1280" height="832" fill="white"></rect>
           <g id="fill">
             <path id="background" d="M1280 832L1280 0L0 -5.59506e-05L-3.63679e-05 832L1280 832Z" fill="#F6559D" />
-            <StyledPathAnimated d="M 730,870 L 730,840 L 850,710" stroke="#F6559D" strokeWidth="75" $dashoffset={dashOffset} pathLength="1" />
+            <StyledPathAnimated d="M 730,870 L 730,840 L 850,710" stroke="#F6559D" strokeWidth="75" pathLength="1" />
             <StyledPath d="M 1250,840 L 1260,820" stroke="#F6559D" strokeWidth="100" pathLength="1" />
             <LeftBottom />
             <CenterTop />
