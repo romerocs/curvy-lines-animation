@@ -3,7 +3,7 @@
   position: relative;
 }
 
-#root svg {
+.curvy-lines {
   position: fixed;
   top: 0;
   left: 0;

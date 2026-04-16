@@ -1,10 +1,12 @@
 import './App.css';
 import { normalize } from './utils';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
 import styled from 'styled-components';
+
+import ScrollIndicator from './ScrollIndicator';
 
 const StyledPath = styled.path`
   stroke-dashoffset: calc(var(--dashoffset, 1) * 1px);
@@ -18,7 +20,7 @@ const StyledPathAnimated = styled.path`
 
 const Scroller = styled.div`
   height: 5000px;
-`
+`;
 
 const BottomRight = ({ staticBg }: { staticBg?: boolean }) => {
   const style = staticBg ? { '--dashoffset': '0px' } as CSSProperties : {};
@@ -78,11 +80,10 @@ const LeftBottom = () => {
 }
 
 function App() {
+  const [scrollIndicatorIsVisible, setScrollIndicatorVisibility] = useState<boolean>(true);
+
   const svgRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
-    console.log(svgRef.current);
-  }, []);
 
   useEffect(() => {
     function scrollHandler() {
@@ -94,6 +95,10 @@ function App() {
         html.clientHeight, html.scrollHeight, html.offsetHeight);
 
       const normalized = normalize(currentScrollPosY, 0, documentHeight - window.innerHeight, 1, 0);
+
+      if (scrollIndicatorIsVisible) {
+        setScrollIndicatorVisibility(false);
+      }
 
       if (svgRef.current) {
         svgRef.current.style.setProperty('--dashoffset', normalized + '');
@@ -107,8 +112,9 @@ function App() {
   }, []);
   return (
     <>
+      <ScrollIndicator isVisible={scrollIndicatorIsVisible} />
       <Scroller />
-      <svg ref={svgRef} viewBox="0 0 1280 832" fill="none" preserveAspectRatio="xMidYMid slice">
+      <svg ref={svgRef} className='curvy-lines' viewBox="0 0 1280 832" fill="none" preserveAspectRatio="xMidYMid slice">
         <g clipPath="url(#clip0_1_2)">
           <rect width="1280" height="832" fill="white"></rect>
           <g id="fill">
